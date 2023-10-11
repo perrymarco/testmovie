@@ -70,6 +70,17 @@ require __DIR__ . '/vendor/autoload.php';
                 echo "<li>Attore: ".$actorname.", Carriera: ".$countyears." anni</li>";                         
             }
             echo '</ul>';
+
+
+            
+            echo '<h2>7) Implementare uno script che cancella i film più vecchi di 5 anni.</h2>';
+            $year = date("Y");
+            $query = "DELETE FROM movies WHERE year < :oldyear";
+            $stmt = $conn->prepare($query);
+            $stmt->bindValue(":oldyear", $year - 5, PDO::PARAM_INT);           
+            $stmt->execute();
+            echo "Film più vecchi di 5 anni eliminati con successo.<br>";
+
         
         
         ?>
