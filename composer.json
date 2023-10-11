@@ -3,5 +3,8 @@
     "type": "project",
     "require-dev": {
         "symfony/var-dumper": "^6.3"
+    },
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.29"
     }
 }
