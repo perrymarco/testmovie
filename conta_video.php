@@ -28,6 +28,7 @@ require __DIR__ . '/vendor/autoload.php';
                 $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
             } catch (PDOException $e) {
                 echo "Connection failed: " . $e->getMessage();
+                die();
             }
             // set the PDO error mode to exception
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -35,6 +36,18 @@ require __DIR__ . '/vendor/autoload.php';
             $movieCountQuery->execute();
             $movieCount = $movieCountQuery->fetchColumn();
             echo 'Il numero dei film è <b>' .  $movieCount . '</b><br>';
+
+
+            echo '<h2>2) Conta Video</h2>';
+
+            $randomMoviesQuery = $conn->prepare("SELECT * FROM movies ORDER BY RAND() LIMIT 2");
+            $randomMoviesQuery->execute();
+            $randomMovies = $randomMoviesQuery->fetchAll(\PDO::FETCH_ASSOC);
+            echo '<ul>';
+            foreach ($randomMovies as $movie) {
+                echo "<li>" . $movie['title'] . "</li>";              
+            }
+            echo '</ul>';
 
         
         
