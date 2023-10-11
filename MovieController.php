@@ -34,15 +34,50 @@ class MovieController {
     }
 
     public function deleteMovie($movieId) {
-        $query = "DELETE FROM movies WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $movieId, PDO::PARAM_INT);
-        $stmt->execute();
+        $this->db->beginTransaction();
+        try {
+            $query = "DELETE FROM movie_actor WHERE movie_id = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $movieId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $query = "DELETE FROM movie_director WHERE movie_id = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $movieId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $query = "DELETE FROM movie_genre WHERE movie_id = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $movieId, PDO::PARAM_INT);
+            $stmt->execute();
+    
+            $query = "DELETE FROM movies WHERE id = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $movieId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $this->db->commit();
+    
+        } catch (PDOException $e) {
+            $this->db->rollBack(); 
+            throw $e; 
+        }
     }
 
     public function getAllMovies() {
         $query = "SELECT * FROM movies";
         $stmt = $this->db->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getActorsForMovie($movieId) {
+        $query = "SELECT actors.id, actors.lastname, actors.firstname
+                  FROM actors
+                  JOIN movie_actor ON actors.id = movie_actor.actor_id
+                  WHERE movie_actor.movie_id = :movieId";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':movieId', $movieId, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

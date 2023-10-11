@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/connection.php';
 ?>
 
 <!DOCTYPE html>
@@ -19,18 +20,7 @@ require __DIR__ . '/vendor/autoload.php';
     
             <h2>1) Conta Video</h2>
             <?php
-            $servername = "localhost";//db on docker
-            $servername = "db";
-            $username = "movies";
-            $password = "movies";
-            $db = "movies";
-            try {
-                $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
-            } catch (PDOException $e) {
-                echo "Connection failed: " . $e->getMessage();
-                die();
-            }
-            // set the PDO error mode to exception
+            $conn=$pdo;             
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $movieCountQuery = $conn->prepare("SELECT COUNT(*) FROM movies");
             $movieCountQuery->execute();
